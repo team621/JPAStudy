@@ -9,4 +9,10 @@
  - 패러다임의 불일치를 해결
 
 3. 영속성 컨텍스트
- -
+
+4. 스키마 자동생성 옵션 (운영서버에서는 CREATE, CREATE-DROP, UPDATE는 절대 사용하면 안됨)
+   - CREATE : DROP 후 CREATE
+   - CREATE : DROP : CREATE 후 종료 시 DROP
+   - UPDATE : 기존 테이블을 DROP 하지 않고 ALTER, 컬럼 추가만 가능
+   - VALIDATE : 엔티티와 테이블이 정상 매핑되었는지 확인
+   - NONE : 기능을 사용하지 않음

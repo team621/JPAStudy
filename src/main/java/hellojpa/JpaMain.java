@@ -18,26 +18,11 @@ public class JpaMain {
         EntityTransaction tx = em.getTransaction();
         tx.begin();
 
+        //매핑 클래스
+        Mapping mapping = new Mapping();
+
         try{
-            //Insert
-            //persis(em);
-            //Select
-            //find(em);
-            //Delete
-            //remove(em);
-            //Update
-            //update(em);
-            //JPQL
-            //jpql(em);
-            //영속성1
-            //persistance(em);
-            //영속성2
-            //persistance2(em);
-            //쓰기 지연
-            //delay(em);
-            //변경감지
-            //dirtyCheking(em);
-            semiPersitence(em);
+            mapping.test();
 
             //트랜잭션 커밋
             tx.commit();
@@ -48,7 +33,7 @@ public class JpaMain {
             //엔티티 매니저 종료
             em.close();
         }
-        
+
         //엔티티 매니저 팩토리 종료
         emf.close();
     }
@@ -57,7 +42,7 @@ public class JpaMain {
     public static void persis(EntityManager em){
         Member member = new Member();
         member.setId(3L);
-        member.setName("HelloC");
+        member.setUsername("HelloC");
         em.persist(member);
     }
 
@@ -65,7 +50,7 @@ public class JpaMain {
     public static void find(EntityManager em){
         Member findMmeber = em.find(Member.class, 2L);
         System.out.println("findMmeber.getId() : " + findMmeber.getId());
-        System.out.println("findMmeber.getName() : " + findMmeber.getName());
+        System.out.println("findMmeber.getName() : " + findMmeber.getUsername());
     }
 
     //Delete
@@ -77,13 +62,13 @@ public class JpaMain {
     //Update
     public static void update(EntityManager em){
         Member findMmeber = em.find(Member.class, 1L);
-        findMmeber.setName("HelloJPA");
+        findMmeber.setUsername("HelloJPA");
     }
 
     //JPQL
     public static void jpql(EntityManager em){
         List<Member> result = em.createQuery("select m from Member as m", Member.class).getResultList();
-        for(Member member : result) System.out.println("Member : " + member.getName());
+        for(Member member : result) System.out.println("Member : " + member.getUsername());
     }
 
     //영속성
@@ -91,8 +76,8 @@ public class JpaMain {
         //비영속 상태
         Member member = new Member();
         member.setId(101L);
-        member.setName("HelloJPA");
-        
+        member.setUsername("HelloJPA");
+
         //영속 상태, 1차 캐시에 올림
         System.out.println("=== Before ===");
         em.persist(member);
@@ -101,7 +86,7 @@ public class JpaMain {
         Member findMember = em.find(Member.class, 101L);
         //SELECT QUERY가 날아가지 않음 (1차 캐시에서 가져옴)
         System.out.println("findMember.id = " + findMember.getId());
-        System.out.println("findMember.name = " + findMember.getName());
+        System.out.println("findMember.name = " + findMember.getUsername());
     }
 
     //영속성2, 동일성
@@ -109,7 +94,7 @@ public class JpaMain {
         //SELECT QUERY가 한번만 날아감, 1번에서 1차캐시에 올림
         Member findMember1 = em.find(Member.class, 101L);
         Member findMember2 = em.find(Member.class, 101L);
-        
+
         System.out.println("result : " + (findMember1 == findMember2));
     }
 
@@ -127,14 +112,14 @@ public class JpaMain {
     //변경감지
     public static void dirtyCheking(EntityManager em){
         Member member = em.find(Member.class, 150L);
-        member.setName("ZZZZZZ");
+        member.setUsername("ZZZZZZ");
         System.out.println("========================");
     }
 
     //준영속
     public static void semiPersitence(EntityManager em){
         Member member = em.find(Member.class, 150L);
-        member.setName("AAAAA");
+        member.setUsername("AAAAA");
 
         em.detach(member); //특정 엔티티만 준영속 상태로 만듦
         em.clear(); //모든 엔티티를 준영속 상태로 만듦 (영속성 컨텍스트를 초기화)
