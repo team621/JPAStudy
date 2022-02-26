@@ -8,10 +8,12 @@ import java.util.Date;
 @Entity(name="Member")
 //↓ 테이블 명을 지정 가능 (지정안하면 클래스명과 동일한 테이블과 매핑됨)
 @Table(name="MEMBER")
+@SequenceGenerator(name = "member_seq_generator", sequenceName = "member_seq")
 public class Member {
-    
+
     //PK 값 설정
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_seq_generator")
     private Long id;
 
     @Column(name = "name")

@@ -22,7 +22,7 @@ public class JpaMain {
         Mapping mapping = new Mapping();
 
         try{
-            mapping.test();
+            mapping.idMapping(em);
 
             //트랜잭션 커밋
             tx.commit();
