@@ -19,3 +19,5 @@
 
 5. 기본키 매핑
    - 어노테이션 > id(직접 할당), GeneratedValue(자동 생성)
+   - IDDENTIFY 타입은 persist를 호출 하는 시점에 insert 쿼리가 날아감
+   - SEQUENSE의 ALLOCATIONSIZE 옵션 사용 시 필요할 때마다 DB에 시퀀스 값 호출 (해당 값을 50으로 설정 시 50개 차면 그때 호출됨)
