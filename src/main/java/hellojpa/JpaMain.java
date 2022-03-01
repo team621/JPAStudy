@@ -22,7 +22,9 @@ public class JpaMain {
         Mapping mapping = new Mapping();
 
         try{
-            mapping.idMapping(em);
+            mapping.juinrel(em);
+
+
 
             //트랜잭션 커밋
             tx.commit();
@@ -100,11 +102,11 @@ public class JpaMain {
 
     //쓰기 지연
     public static void delay(EntityManager em){
-        Member member1 = new Member(150L, "A");
-        Member member2 = new Member(160L, "B");
+        //Member member1 = new Member(150L, "A");
+        //Member member2 = new Member(160L, "B");
 
-        em.persist(member1);
-        em.persist(member2);
+        //em.persist(member1);
+        //em.persist(member2);
         //이후로 쿼리가 날아감, ↑ 여기서 1차캐시에 insert 쿼리가 올라감
         System.out.println("====================");
     }
