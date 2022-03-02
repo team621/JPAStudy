@@ -14,9 +14,12 @@ public class Team {
 
     private String name;
 
+    //양방향 관계를 설정해도 DB에는 영향을 주지 않음
+    //아래가 양방향 관계 설정 코드
+    //mappedby는 MEMBER 클래스의 변수명
     @OneToMany(mappedBy = "team")
     private List<Member> members = new ArrayList<>();
-
+    
     public Long getId() {
         return id;
     }

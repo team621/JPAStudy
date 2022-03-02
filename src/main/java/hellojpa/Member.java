@@ -46,5 +46,7 @@ public class Member {
 
     public void setTeam(Team team) {
         this.team = team;
+        //team 추가 시 자동으로 자신을 team의 멤버로 추가하도록 set method 변경
+        team.getMembers().add(this);
     }
 }
