@@ -1,10 +1,13 @@
 package hellojpa;
 
+import org.hibernate.Hibernate;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 public class JpaMain {
@@ -24,23 +27,67 @@ public class JpaMain {
 
         try{
 
-            Member member = new Member();
-            member.setUsername("USER1");
-            member.setCreateBy("KIM");
-            member.setCreateDate(LocalDateTime.now());
+            Member member1 = new Member();
+            member1.setUsername("HELLO1");
+            em.persist(member1);
 
-            em.persist(member);
+            Member member2 = new Member();
+            member2.setUsername("HELLO2");
+            em.persist(member2);
+
+            Member member3 = new Member();
+            member2.setUsername("HELLO3");
+            em.persist(member3);
 
             em.flush();
             em.clear();
 
+            /*
+            Member findMember = em.find(Member.class, member.getId());
+            System.out.println("findMember = " + findMember.getId());
+            System.out.println("findMember.getUsername() = " + findMember.getUsername());
+            */
+            /*
+            Member findMember = em.getReference(Member.class, member1.getId());
+            System.out.println("findMember.getClass() = " + findMember.getClass());
+            //↑ class hellojpa.Member$HibernateProxy$4w5rWSxP <<<<-- 가짜 엔티티 객체(프록시)
+            System.out.println("findMember.getId() = " + findMember.getId());
+            //↑ 여기까진 DB에 셀렉트 쿼리를 날리지 않음
+            System.out.println("findMember.getUsername() = " + findMember.getUsername());
+            System.out.println("findMember.getUsername() = " + findMember.getUsername());
+            //↑ 이미 프록시객체에 값이 있기 때문에 쿼리를 날리지 않음
+            */
+            /*
+            Member m1 = em.find(Member.class, member1.getId());
+            Member m2 = em.find(Member.class, member2.getId());
+            Member m3 = em.getReference(Member.class, member3.getId());
 
+            System.out.println("(member1.getClass() == member2.getClass()) = " + (m1.getClass() == m2.getClass())); //true
+            System.out.println("(member1.getClass() == member2.getClass()) = " + (m1.getClass() == m3.getClass())); //false
+            System.out.println("(m1 instanceof Member) = " + (m1 instanceof Member)); //true
+            System.out.println("(m1 instanceof Member) = " + (m3 instanceof Member)); //true
+            */
+            /*
+            Member m1 = em.find(Member.class, member1.getId());
+            System.out.println("m1.getClass() = " + m1.getClass());
+            */
+
+            Member reference = em.getReference(Member.class, member1.getId());
+            System.out.println("refe.getClass() = " + reference.getClass());
+            //System.out.println("(m1==refe) = " + (m1 == reference));
+
+            //프록시 초기화 여부
+            System.out.println("emf.getPersistenceUnitUtil().isLoaded(reference) = " + emf.getPersistenceUnitUtil().isLoaded(reference));
+            Hibernate.initialize(reference); //강제 초기화
+            reference.getUsername();
+            System.out.println("emf.getPersistenceUnitUtil().isLoaded(reference) = " + emf.getPersistenceUnitUtil().isLoaded(reference));
 
             //트랜잭션 커밋
             tx.commit();
         }catch (Exception e){
             //트랜잭션 롤백
             tx.rollback();
+            e.printStackTrace();
         }finally {
             //엔티티 매니저 종료
             em.close();
