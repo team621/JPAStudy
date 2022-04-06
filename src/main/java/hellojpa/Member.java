@@ -22,7 +22,10 @@ public class Member extends BaseEntity{
     //@Column(name="TEAM_ID")
     //private Long teamid;
 
-    @ManyToOne
+    //지연로딩
+    //@ManyToOne(fetch = FetchType.LAZY)
+    //즉시로딩
+    @ManyToOne(fetch = FetchType.EAGER)
     //insertable, updateable을 false로 설정 시 DB에 인서트, 업데이트가 안됨_읽기 전용
     @JoinColumn(name="TEAM_ID")
     private Team team;

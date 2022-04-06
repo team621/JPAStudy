@@ -27,6 +27,58 @@ public class JpaMain {
 
         try{
 
+            //영속성 전이(CASCADE), 고아객체
+            Parent parent = new Parent();
+            Child child1 = new Child();
+            Child child2 = new Child();
+
+            parent.addChild(child1);
+            parent.addChild(child2);
+
+            //원래 방식
+            /*
+            em.persist(parent);
+            em.persist(child1);
+            em.persist(child2);
+            */
+
+            //영속성 전이 설정 후
+            em.persist(parent);
+
+            //고아객체
+            em.flush();
+            em.clear();
+
+            Parent findParent = em.find(Parent.class, parent.getId());
+            findParent.getChildList().remove(0);
+
+            /*
+            //즉시로딩(EAGER) 지연로딩(LAZY)
+            Member member1 = new Member();
+            member1.setUsername("MEMBER1");
+            Team team = new Team();
+
+            team.setName("teamA");
+            member1.setTeam(team);
+
+            em.persist(team);
+            em.persist(member1);
+
+            em.flush();
+            em.clear();
+
+            Member findMember = em.find(Member.class, member1.getId());
+
+            System.out.println("findMember.getClass() = " + findMember.getTeam().getClass());
+
+            System.out.println("============================");
+            findMember.getTeam().getName();
+            System.out.println("============================");
+
+            */
+
+            //프록시
+            /*
             Member member1 = new Member();
             member1.setUsername("HELLO1");
             em.persist(member1);
@@ -41,7 +93,7 @@ public class JpaMain {
 
             em.flush();
             em.clear();
-
+            */
             /*
             Member findMember = em.find(Member.class, member.getId());
             System.out.println("findMember = " + findMember.getId());
@@ -71,7 +123,7 @@ public class JpaMain {
             Member m1 = em.find(Member.class, member1.getId());
             System.out.println("m1.getClass() = " + m1.getClass());
             */
-
+            /*
             Member reference = em.getReference(Member.class, member1.getId());
             System.out.println("refe.getClass() = " + reference.getClass());
             //System.out.println("(m1==refe) = " + (m1 == reference));
@@ -81,7 +133,7 @@ public class JpaMain {
             Hibernate.initialize(reference); //강제 초기화
             reference.getUsername();
             System.out.println("emf.getPersistenceUnitUtil().isLoaded(reference) = " + emf.getPersistenceUnitUtil().isLoaded(reference));
-
+            */
             //트랜잭션 커밋
             tx.commit();
         }catch (Exception e){
