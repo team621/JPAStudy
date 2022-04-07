@@ -26,7 +26,16 @@ public class JpaMain {
         Mapping mapping = new Mapping();
 
         try{
+            //임베디드 타입
+            Member member = new Member();
+            member.setUsername("Hell");
 
+            Address address = new Address();
+            address.setCity("ANSAN");
+            member.setHomeaddress(address);
+            
+            em.persist(member);
+            /*
             //영속성 전이(CASCADE), 고아객체
             Parent parent = new Parent();
             Child child1 = new Child();
@@ -40,7 +49,6 @@ public class JpaMain {
             em.persist(parent);
             em.persist(child1);
             em.persist(child2);
-            */
 
             //영속성 전이 설정 후
             em.persist(parent);
@@ -48,10 +56,10 @@ public class JpaMain {
             //고아객체
             em.flush();
             em.clear();
-
+            
             Parent findParent = em.find(Parent.class, parent.getId());
             findParent.getChildList().remove(0);
-
+            */
             /*
             //즉시로딩(EAGER) 지연로딩(LAZY)
             Member member1 = new Member();

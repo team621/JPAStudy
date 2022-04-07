@@ -1,6 +1,7 @@
 package hellojpa;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -38,6 +39,26 @@ public class Member extends BaseEntity{
     @JoinTable(name="MEMBER_PRODUCT")
     private List<MemberProduct> memberProducts = new ArrayList<>();
 
+    //기간
+    @Embedded
+    private Period workPeriod;
+
+    //주소
+    @Embedded
+    private Address Homeaddress;
+
+    //주소
+    //한 엔티티에서 같은 값을 사용할 때 사용하는 방법
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name="city",
+                    column=@Column(name = "WORK_CITY")),
+            @AttributeOverride(name="street",
+                    column=@Column(name = "WORK_STREET")),
+            @AttributeOverride(name="zipcode",
+                    column=@Column(name = "WORK_ZIPCODE"))
+    })
+    private Address workddress;
     public Long getId() {
         return id;
     }
@@ -62,5 +83,37 @@ public class Member extends BaseEntity{
         this.team = team;
         //team 추가 시 자동으로 자신을 team의 멤버로 추가하도록 set method 변경
         team.getMembers().add(this);
+    }
+
+    public Locker getLocker() {
+        return locker;
+    }
+
+    public void setLocker(Locker locker) {
+        this.locker = locker;
+    }
+
+    public List<MemberProduct> getMemberProducts() {
+        return memberProducts;
+    }
+
+    public void setMemberProducts(List<MemberProduct> memberProducts) {
+        this.memberProducts = memberProducts;
+    }
+
+    public Period getWorkPeriod() {
+        return workPeriod;
+    }
+
+    public void setWorkPeriod(Period workPeriod) {
+        this.workPeriod = workPeriod;
+    }
+
+    public Address getHomeaddress() {
+        return Homeaddress;
+    }
+
+    public void setHomeaddress(Address homeaddress) {
+        Homeaddress = homeaddress;
     }
 }
