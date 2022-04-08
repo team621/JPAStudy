@@ -2,16 +2,13 @@ package hellojpa;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 //↓ 필수 (JPA에 사용되는 클래스인걸 표시, JPA가 관리)
 //name 지정 가능, 지정안하면 클래스명을 사용
 @Entity(name="Member")
 //↓ 테이블 명을 지정 가능 (지정안하면 클래스명과 동일한 테이블과 매핑됨)
 public class Member extends BaseEntity{
-
     //PK 값 설정
     @Id
     @GeneratedValue
@@ -46,6 +43,16 @@ public class Member extends BaseEntity{
     //주소
     @Embedded
     private Address Homeaddress;
+
+    //↓ 값 타입 컬렉션
+    @ElementCollection
+    @CollectionTable(name = "FAVORITE_FOOD", joinColumns = @JoinColumn(name = "MEMBER_ID"))
+    @Column(name = "FOOD_NAME")
+    private Set<String> favoriteFoods = new HashSet<>();
+
+    @ElementCollection
+    @CollectionTable(name = "ADDRESS", joinColumns = @JoinColumn(name = "MEMBER_ID"))
+    private List<Address> addressHistory = new ArrayList<>();
 
     //주소
     //한 엔티티에서 같은 값을 사용할 때 사용하는 방법
@@ -115,5 +122,29 @@ public class Member extends BaseEntity{
 
     public void setHomeaddress(Address homeaddress) {
         Homeaddress = homeaddress;
+    }
+
+    public Set<String> getFavoriteFoods() {
+        return favoriteFoods;
+    }
+
+    public void setFavoriteFoods(Set<String> favoriteFoods) {
+        this.favoriteFoods = favoriteFoods;
+    }
+
+    public List<Address> getAddressHistory() {
+        return addressHistory;
+    }
+
+    public void setAddressHistory(List<Address> addressHistory) {
+        this.addressHistory = addressHistory;
+    }
+
+    public Address getWorkddress() {
+        return workddress;
+    }
+
+    public void setWorkddress(Address workddress) {
+        this.workddress = workddress;
     }
 }

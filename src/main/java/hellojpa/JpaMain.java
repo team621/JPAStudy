@@ -26,6 +26,49 @@ public class JpaMain {
         Mapping mapping = new Mapping();
 
         try{
+
+            Member member = new Member();
+            member.setUsername("member1");
+            member.setHomeaddress(new Address("homeCity1", "street", "10000"));
+
+            member.getFavoriteFoods().add("치킨");
+            member.getFavoriteFoods().add("족발");
+            member.getFavoriteFoods().add("피자");
+
+            member.getAddressHistory().add(new Address("old1", "street", "10000"));
+            member.getAddressHistory().add(new Address("old2", "street", "10000"));
+
+            
+            em.persist(member);
+
+            em.flush();
+            em.clear();
+
+            Member findMember = em.find(Member.class, member.getId());
+
+            System.out.println("============================");
+
+            List<Address> addressHistory = findMember.getAddressHistory();
+
+            for(Address address : addressHistory){
+                System.out.println("addressHistory = " + address.getCity());
+            }
+
+            //이건 안됨
+            findMember.getHomeaddress().setCity("HOMETOWN");
+
+            //이대로 해야 업데이트
+            Address add = findMember.getHomeaddress();
+            findMember.setHomeaddress(new Address("newCity", add.getStreet(), add.getZipcode()));
+            
+            //치킨을 한식으로 변경
+            findMember.getFavoriteFoods().remove("치킨");
+            findMember.getFavoriteFoods().add("한식");
+
+            findMember.getAddressHistory().remove(new Address("old1", "street", "10000"));
+            findMember.getAddressHistory().add(new Address("new1", "street", "10000"));
+            
+            /*
             //임베디드 타입
             Member member = new Member();
             member.setUsername("Hell");
@@ -35,6 +78,7 @@ public class JpaMain {
             member.setHomeaddress(address);
             
             em.persist(member);
+             */
             /*
             //영속성 전이(CASCADE), 고아객체
             Parent parent = new Parent();
