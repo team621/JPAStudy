@@ -1,11 +1,12 @@
 package hellojpa;
 
 import org.hibernate.Hibernate;
+import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
+import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -26,7 +27,27 @@ public class JpaMain {
         Mapping mapping = new Mapping();
 
         try{
+            //JPQL
+            List<Member> result = (List<Member>) em.createQuery(
+                    "select m from Member m where m.username like '%kim'", Member.class
+            ).getResultList();
 
+            //Criteria (동적 쿼리 사용하기 편함), 잘안씀, 유지보수 어려움, 복잡함
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Member> query = cb.createQuery(Member.class);
+
+            Root<Member> m = query.from(Member.class);
+
+            CriteriaQuery<Member> where = query.select(m).where(cb.equal(m.get("username"), "kim"));
+
+            List<Member> resultList = em.createQuery(where).getResultList();
+
+            //QueryDSL 문자가 아닌 자바코드로 jpql을 작성 가능, 컴파일 시점에 오류 발견 가능, 동적쿼리 작성이 편리, 실무 사용 권장, 셋팅을 해아함
+
+            //네이티브 SQL 기본 SQL을 날리는 것
+            em.createNativeQuery("select id, city, street from member").getResultList();
+
+            /*
             Member member = new Member();
             member.setUsername("member1");
             member.setHomeaddress(new Address("homeCity1", "street", "10000"));
@@ -67,7 +88,7 @@ public class JpaMain {
 
             findMember.getAddressHistory().remove(new Address("old1", "street", "10000"));
             findMember.getAddressHistory().add(new Address("new1", "street", "10000"));
-            
+            */
             /*
             //임베디드 타입
             Member member = new Member();
