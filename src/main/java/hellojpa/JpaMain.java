@@ -28,6 +28,35 @@ public class JpaMain {
 
         try{
             //JPQL
+            //typequery vs query
+
+            Member member = new Member();
+            member.setUsername("member1");
+            em.persist(member);
+
+            TypedQuery<Member> query = em.createQuery("SELECT m FROM Member as m where m.id = 10", Member.class);
+            TypedQuery<String> query1 = em.createQuery("SELECT m.username FROM Member as m", String.class);
+            Query query2 = em.createQuery("SELECT m.username, m.id FROM Member as m");
+            TypedQuery<Member> query3 = em.createQuery("SELECT m FROM Member as m where m.username = :username", Member.class);
+            query3.setParameter("username", "member1");
+
+            System.out.println("==========================================================");
+            List<Member> resultList1 = query3.getResultList();
+            System.out.println("==========================================================");
+            System.out.println("singleResult1 = " + resultList1.get(0).getUsername());
+            System.out.println("==========================================================");
+
+            //getResultList 결과가 없으면 빈 리스트 반환 (null exception 고려  안해도 됨)
+            //getSingleResult 결과가 하나가 아니면 무조건 exception 발생, 없으면 null, 두개 이상이어도 익셉션
+            List<Member> resultList = query.getResultList();
+            //Member singleResult = query.getSingleResult();
+
+            for(Member member1 : resultList) System.out.println("member1 = " + member1);
+
+
+
+            /*
+            //JPQL
             List<Member> result = (List<Member>) em.createQuery(
                     "select m from Member m where m.username like '%kim'", Member.class
             ).getResultList();
@@ -46,7 +75,7 @@ public class JpaMain {
 
             //네이티브 SQL 기본 SQL을 날리는 것
             em.createNativeQuery("select id, city, street from member").getResultList();
-
+            */
             /*
             Member member = new Member();
             member.setUsername("member1");
