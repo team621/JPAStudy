@@ -27,9 +27,33 @@ public class JpaMain {
         Mapping mapping = new Mapping();
 
         try{
+
+            //프로젝션(SELECT)
+            Member member = new Member();
+            member.setUsername("member1");
+            member.setAge(2);
+            em.persist(member);
+
+            TypedQuery<Member> query = em.createQuery("SELECT m FROM Member as m", Member.class);
+            List<Member> resultList = query.getResultList();
+
+            //아래는 비추천 (조인으로인해 성능 저하 가능성), 직접 조인을 해서 사용할 것(명시할 것), 이후에 학습 예정
+            TypedQuery<Team> query1 = em.createQuery("SELECT distinct m.team FROM Member as m", Team.class);
+            List<Team> resultList1 = query1.getResultList();
+
+            Member member1 = resultList.get(0);
+            System.out.println("========================================================");
+            //생성자를 통해서 호출
+            List<MemberDTO> resultList2 = em.createQuery("SELECT new jpql.MemberDTO(m.username, m.age) FROM Member as m", MemberDTO.class).getResultList();
+
+            MemberDTO memberDTO = resultList2.get(0);
+            System.out.println("memberDTO = " + memberDTO.getUsername());
+
+
+
             //JPQL
             //typequery vs query
-
+/*
             Member member = new Member();
             member.setUsername("member1");
             em.persist(member);
@@ -52,7 +76,7 @@ public class JpaMain {
             //Member singleResult = query.getSingleResult();
 
             for(Member member1 : resultList) System.out.println("member1 = " + member1);
-
+*/
 
 
             /*
