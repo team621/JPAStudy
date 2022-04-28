@@ -28,6 +28,68 @@ public class JpaMain {
 
         try{
 
+            Member member1 = new Member();
+            member1.setUsername("MEMBER1");
+            Team team = new Team();
+
+            team.setName("teamA");
+            member1.setTeam(team);
+
+            em.persist(team);
+            em.persist(member1);
+
+            em.flush();
+            em.clear();
+
+            Member findMember = em.find(Member.class, member1.getId());
+
+            System.out.println("findMember.getClass() = " + findMember.getTeam().getClass());
+
+            System.out.println("============================");
+            findMember.getTeam().getName();
+            System.out.println("============================");
+
+
+            //프록시
+            member1.setUsername("HELLO1");
+            em.persist(member1);
+
+            Member member2 = new Member();
+            member2.setUsername("HELLO2");
+            em.persist(member2);
+
+            Member member3 = new Member();
+            member2.setUsername("HELLO3");
+            em.persist(member3);
+
+            em.flush();
+            em.clear();
+            */
+            /*
+            Member findMember = em.find(Member.class, member.getId());
+            System.out.println("findMember = " + findMember.getId());
+            System.out.println("findMember.getUsername() = " + findMember.getUsername());
+            */
+            /*
+            Member findMember = em.getReference(Member.class, member1.getId());
+            System.out.println("findMember.getClass() = " + findMember.getClass());
+            //↑ class hellojpa.Member$HibernateProxy$4w5rWSxP <<<<-- 가짜 엔티티 객체(프록시)
+            System.out.println("findMember.getId() = " + findMember.getId());
+            //↑ 여기까진 DB에 셀렉트 쿼리를 날리지 않음
+            System.out.println("findMember.getUsername() = " + findMember.getUsername());
+            System.out.println("findMember.getUsername() = " + findMember.getUsername());
+            //↑ 이미 프록시객체에 값이 있기 때문에 쿼리를 날리지 않음
+            */
+            /*
+            Member m1 = em.find(Member.class, member1.getId());
+            Member m2 = em.find(Member.class, member2.getId());
+            Member m3 = em.getReference(Member.class, member3.getId());
+
+            System.out.println("(member1.getClass() == member2.getClass()) = " + (m1.getClass() == m2.getClass())); //true
+            System.out.println("(member1.getClass() == member2.getClass()) = " + (m1.getClass() == m3.getClass())); //false
+            System.out.println("(m1 instanceof Member) = " + (m1 instanceof Member)); //true
+            System.out.println("(m1 instanceof Member) = " + (m3 instanceof Member)); //true
+/*
             //프로젝션(SELECT)
             Member member = new Member();
             member.setUsername("member1");
@@ -48,7 +110,7 @@ public class JpaMain {
 
             MemberDTO memberDTO = resultList2.get(0);
             System.out.println("memberDTO = " + memberDTO.getUsername());
-
+*/
 
 
             //JPQL
