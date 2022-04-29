@@ -28,43 +28,47 @@ public class JpaMain {
 
         try{
 
-            Member member1 = new Member();
-            member1.setUsername("MEMBER1");
-            Team team = new Team();
+            //페이징
+            //setFirstResult / setMaxResults
+            for(int i=0; i< 100; i++) {
+                Member member = new Member();
+                member.setUsername("member1");
+                member.setAge(i);
+                em.persist(member);
+            }
 
-            team.setName("teamA");
+            em.flush();
+            em.clear();
+
+            List<Member> resultList = em.createQuery("select m from Member m order by m.age desc", Member.class).setFirstResult(0).setMaxResults(10).getResultList();
+
+            System.out.println("resultList.size() = " + resultList.size());
+
+            for (Member member1 : resultList) System.out.println("member1 = " + member1.getAge());
+
+            //조인
+
+            Team team = new Team();
+            team.setName("tem");
+            em.persist(team);
+
+            Member member1 = new Member();
+            member1.setUsername("uu");
+            member1.setAge(10);
             member1.setTeam(team);
 
-            em.persist(team);
             em.persist(member1);
 
-            em.flush();
-            em.clear();
+            //String query = "select m from Member m inner join m.team t";
+            //String query = "select m from Member m left outer join m.team t";
+            String query = "select m from Member m, team t";
+            TypedQuery<Member> query1 = em.createQuery(query, Member.class);
+            System.out.println("query1 = " + query1.getResultList());
 
-            Member findMember = em.find(Member.class, member1.getId());
-
-            System.out.println("findMember.getClass() = " + findMember.getTeam().getClass());
-
-            System.out.println("============================");
-            findMember.getTeam().getName();
-            System.out.println("============================");
+            //서브쿼리
+            //WHERE 절, HAVING절, SELECT절에서만 사용가능함, FROM 불가능
 
 
-            //프록시
-            member1.setUsername("HELLO1");
-            em.persist(member1);
-
-            Member member2 = new Member();
-            member2.setUsername("HELLO2");
-            em.persist(member2);
-
-            Member member3 = new Member();
-            member2.setUsername("HELLO3");
-            em.persist(member3);
-
-            em.flush();
-            em.clear();
-            */
             /*
             Member findMember = em.find(Member.class, member.getId());
             System.out.println("findMember = " + findMember.getId());
