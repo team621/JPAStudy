@@ -1,14 +1,6 @@
 package hellojpa;
 
-import org.hibernate.Hibernate;
-import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
-
 import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 public class JpaMain {
@@ -27,7 +19,45 @@ public class JpaMain {
         Mapping mapping = new Mapping();
 
         try{
+            Member member = new Member();
+            member.setUsername(null);
+            member.setAge(10);
+            member.setType(MemberType.USER);
 
+            em.persist(member);
+
+            String query = "select m.username, 'HEELO', TRUE from Member m"+
+                            " where m.type = :type";
+            List<Object[]> resultList = em.createQuery(query).setParameter("type", MemberType.ADMIN).getResultList();
+
+            for(Object[] objects : resultList){
+                System.out.println("objects[0] = " + objects[0]);
+                System.out.println("objects[1] = " + objects[1]);
+                System.out.println("objects[2] = " + objects[2]);
+            }
+
+            String query2 = "select " +
+                                "case when m.age <= 10 then '학생요금' " +
+                                "when m.age >= 60 then '경로요금' " +
+                                "else '일반요금' " +
+                                "end " +
+                            "from Member m";
+            List<String> resultList1 = em.createQuery(query2, String.class).getResultList();
+
+            for(String s : resultList1) System.out.println("s = " + s);
+
+            String query3 = "select coalesce(m.username, '이름 없는 회원') as username from Member m";
+            List<String> resultList2 = em.createQuery(query3, String.class).getResultList();
+
+            for(String s : resultList2) System.out.println("s = " + s);
+
+            String query4 = "select function(group_concat, m.username) from Member m";
+
+           //List<String> resultList3 = em.createQuery(query4).getResultList();
+            //for (String s : resultList3) System.out.println("s = " + s);
+
+
+            /*
             //페이징
             //setFirstResult / setMaxResults
             for(int i=0; i< 100; i++) {
@@ -67,7 +97,7 @@ public class JpaMain {
 
             //서브쿼리
             //WHERE 절, HAVING절, SELECT절에서만 사용가능함, FROM 불가능
-
+            */
 
             /*
             Member findMember = em.find(Member.class, member.getId());

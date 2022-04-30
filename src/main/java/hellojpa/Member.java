@@ -1,7 +1,6 @@
 package hellojpa;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.*;
 
 //↓ 필수 (JPA에 사용되는 클래스인걸 표시, JPA가 관리)
@@ -18,6 +17,9 @@ public class Member extends BaseEntity{
     private String username;
 
     private int age;
+
+    @Enumerated(EnumType.STRING)
+    private MemberType type;
 
     //@Column(name="TEAM_ID")
     //private Long teamid;
@@ -156,5 +158,13 @@ public class Member extends BaseEntity{
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public MemberType getType() {
+        return type;
+    }
+
+    public void setType(MemberType type) {
+        this.type = type;
     }
 }
