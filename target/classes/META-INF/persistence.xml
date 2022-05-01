@@ -10,6 +10,7 @@
             <property name="javax.persistence.jdbc.password" value=""/>
             <property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/~/test"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/><!--각 DB 벤더에 따라 변경, ORACLE, MYSQL 등.. 여기는 H2-->
+            <!--property name="hibernate.dialect" value="hellojpa.MyH2Dialect"/--><!--사용자 함수 등록 시-->
 
             <!-- 옵션 -->
             <property name="hibernate.show_sql" value="true"/>

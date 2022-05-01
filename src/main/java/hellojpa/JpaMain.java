@@ -19,6 +19,26 @@ public class JpaMain {
         Mapping mapping = new Mapping();
 
         try{
+            //경로 표현식
+            Member member = new Member();
+            member.setUsername("!111");
+            member.setAge(10);
+            member.setType(MemberType.USER);
+
+            em.persist(member);
+
+            em.flush();
+            em.clear();
+
+            String query = "select m.team from Member m";
+            String query2 = "select m from Team t join members m";
+
+            //실무에선 묵시적 조인 사용 x , 명시적 조인 추천
+            List<Team> resultList = em.createQuery(query, Team.class).getResultList();
+
+            for (Team s : resultList) System.out.println("s = " + s);
+
+            /*
             Member member = new Member();
             member.setUsername(null);
             member.setAge(10);
@@ -55,7 +75,7 @@ public class JpaMain {
 
            //List<String> resultList3 = em.createQuery(query4).getResultList();
             //for (String s : resultList3) System.out.println("s = " + s);
-
+*/
 
             /*
             //페이징
