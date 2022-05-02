@@ -19,6 +19,71 @@ public class JpaMain {
         Mapping mapping = new Mapping();
 
         try{
+            Team teamA = new Team();
+            teamA.setName("팀A");
+            em.persist(teamA);
+
+            Team teamB = new Team();
+            teamB.setName("팀B");
+            em.persist(teamB);
+
+            Member member1 = new Member();
+            member1.setUsername("회원1");
+            member1.setTeam(teamA);
+            em.persist(member1);
+
+            Member member2 = new Member();
+            member2.setUsername("회원2");
+            member2.setTeam(teamA);
+            em.persist(member2);
+
+            Member member3 = new Member();
+            member3.setUsername("회원1");
+            member3.setTeam(teamB);
+            em.persist(member3);
+
+            em.flush();
+            em.clear();
+
+            //일반
+            String query = "select m from Member m";
+            List<Member> resultList = em.createQuery(query, Member.class).getResultList();
+            
+            //for (Member member : resultList) System.out.println("member.getUsername() + member.getTeam().getName() = " + member.getUsername() + "," +member.getTeam().getName());
+
+            em.flush();
+            em.clear();
+
+            //패치 조인
+            String query2 = "select m from Member m join fetch m.team";
+            List<Member> resultList1 = em.createQuery(query2, Member.class).getResultList();
+
+            //for(Member member : resultList1) System.out.println("member.getUsername() + member.getTeam().getName() = " + member.getUsername() + "," +member.getTeam().getName());
+
+            //컬렉션 패치 조인
+            String query3 = "select t from Team t join fetch t.members";
+            List<Team> resultList2 = em.createQuery(query3, Team.class).getResultList();
+
+            //두개가 중복됨
+            /*
+            for(Team team : resultList2) {
+                System.out.print("member.getUsername() + member.getTeam().getName() = " + team.getName() + "|" + team.getMembers().size());
+                for (Member member : team.getMembers()) System.out.print(" - member = " + member.getUsername() + " ");
+                System.out.println();
+            }
+            */
+            //중복 제거, sql 이후로 jpa 어플리케이션에서 중복을 제거 (원래 sql에서는 제거되는 로우가 아님_모두 같지 않기 때문)
+            String query4 = "select distinct t from Team t join fetch t.members";
+            List<Team> resultList3 = em.createQuery(query4, Team.class).getResultList();
+
+            for(Team team : resultList3) {
+                System.out.print("member.getUsername() + member.getTeam().getName() = " + team.getName() + "|" + team.getMembers().size());
+                for (Member member : team.getMembers()) System.out.print(" - member = " + member.getUsername() + " ");
+                System.out.println();
+            }
+
+            //패치 조인 ☆☆☆☆
+            /*
             //경로 표현식
             Member member = new Member();
             member.setUsername("!111");
@@ -37,7 +102,7 @@ public class JpaMain {
             List<Team> resultList = em.createQuery(query, Team.class).getResultList();
 
             for (Team s : resultList) System.out.println("s = " + s);
-
+            */
             /*
             Member member = new Member();
             member.setUsername(null);
