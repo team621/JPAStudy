@@ -19,6 +19,14 @@ public class JpaMain {
         Mapping mapping = new Mapping();
 
         try{
+            //페치 조인 대상에는 별칭을 줄 수 없다. (가급적 사용  x)
+            //컬렉션을 페치 조인하면 페이징 api사용불가능
+            //페치 조인이 우선권을 가짐
+            //페치 조인은 한번 더 보기
+            //다형성
+            String query = "select i from item i where type(i) in (?,?)";
+            String query2 = "select i from item i where treat(i as Book).auther = 'kim'";
+            /*
             Team teamA = new Team();
             teamA.setName("팀A");
             em.persist(teamA);
@@ -73,6 +81,7 @@ public class JpaMain {
             }
             */
             //중복 제거, sql 이후로 jpa 어플리케이션에서 중복을 제거 (원래 sql에서는 제거되는 로우가 아님_모두 같지 않기 때문)
+            /*
             String query4 = "select distinct t from Team t join fetch t.members";
             List<Team> resultList3 = em.createQuery(query4, Team.class).getResultList();
 
@@ -81,7 +90,7 @@ public class JpaMain {
                 for (Member member : team.getMembers()) System.out.print(" - member = " + member.getUsername() + " ");
                 System.out.println();
             }
-
+            */
             //패치 조인 ☆☆☆☆
             /*
             //경로 표현식

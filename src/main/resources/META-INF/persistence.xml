@@ -18,6 +18,8 @@
             <property name="hibernate.use_sql_comments" value="true"/>
             <!--↓ DDL 쿼리 생성-->
             <property name="hibernate.hbm2ddl.auto" value="create" />
+            <!-- 쿼리를 한번에 몇개 날리지, in (?,?,?,?) -->
+            <property name="hibernate.default_batch_fetch_size" value="100"/>
         </properties>
     </persistence-unit>
 </persistence>
