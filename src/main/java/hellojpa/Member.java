@@ -7,6 +7,10 @@ import java.util.*;
 //name 지정 가능, 지정안하면 클래스명을 사용
 @Entity(name="Member")
 //↓ 테이블 명을 지정 가능 (지정안하면 클래스명과 동일한 테이블과 매핑됨)
+@NamedQuery(
+        name = "Member.findByUserName",
+        query = "select m From Member m where m.username = :username"
+)
 public class Member extends BaseEntity{
     //PK 값 설정
     @Id

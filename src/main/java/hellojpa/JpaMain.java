@@ -19,13 +19,43 @@ public class JpaMain {
         Mapping mapping = new Mapping();
 
         try{
+            //엔티티 직접 사용
+            Member member = new Member();
+            member.setUsername("hi");
+            em.persist(member);
+
+            String query = "select m from Member m where m.id = :memberId";
+            //기본키 값을 사용함
+            //String query2 = "select count(m) from Member m";
+
+            em.flush();
+            em.clear();
+
+            Member singleResult = em.createQuery(query, Member.class).setParameter("memberId", member.getId()).getSingleResult();
+            //Member resultList2 = em.createQuery(query2, Member.class).setParameter("memberId", member.getId()).getSingleResult();
+
+
+            System.out.println("resultList = " + singleResult.getUsername());
+            //System.out.println("resultList = " + resultList2)
+
+            //네임드 쿼리, 어플리케이션 실행 시점에 오류를 잡을 수 있음
+            List<Member> resultList = em.createNamedQuery("Member.findByUserName", Member.class).setParameter("username", "hi").getResultList();
+
+            for (Member member1 : resultList) {
+                System.out.println("member1 = " + member1.getUsername());
+            }
+
+
             //페치 조인 대상에는 별칭을 줄 수 없다. (가급적 사용  x)
             //컬렉션을 페치 조인하면 페이징 api사용불가능
             //페치 조인이 우선권을 가짐
             //페치 조인은 한번 더 보기
             //다형성
+            /*
             String query = "select i from item i where type(i) in (?,?)";
             String query2 = "select i from item i where treat(i as Book).auther = 'kim'";
+            */
+
             /*
             Team teamA = new Team();
             teamA.setName("팀A");
