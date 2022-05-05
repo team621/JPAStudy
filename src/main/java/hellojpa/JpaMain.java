@@ -19,6 +19,41 @@ public class JpaMain {
         Mapping mapping = new Mapping();
 
         try{
+            //벌크연산, 쿼리 한번으로 여러 테이블 로우 변경하는 방법
+            Team teamA = new Team();
+            teamA.setName("팀A");
+            em.persist(teamA);
+
+            Team teamB = new Team();
+            teamB.setName("팀B");
+            em.persist(teamB);
+
+            Member member1 = new Member();
+            member1.setUsername("회원1");
+            member1.setTeam(teamA);
+            em.persist(member1);
+
+            Member member2 = new Member();
+            member2.setUsername("회원2");
+            member2.setTeam(teamA);
+            em.persist(member2);
+
+            Member member3 = new Member();
+            member3.setUsername("회원1");
+            member3.setTeam(teamB);
+            em.persist(member3);
+
+            em.flush();
+            em.clear();
+
+            int resultCount = em.createQuery("update Member m set m.age = 20").executeUpdate();
+
+            System.out.println("resultCount = " + resultCount);
+            //벌크 연산은 영속성 컨텍스트를 무시하고 데이터베이스에 직접 쿼리
+            //벌크 연산 -> 영속성 컨텍스트 초기화
+
+
+            /*
             //엔티티 직접 사용
             Member member = new Member();
             member.setUsername("hi");
@@ -44,6 +79,8 @@ public class JpaMain {
             for (Member member1 : resultList) {
                 System.out.println("member1 = " + member1.getUsername());
             }
+*/
+
 
 
             //페치 조인 대상에는 별칭을 줄 수 없다. (가급적 사용  x)
